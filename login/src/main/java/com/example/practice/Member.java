@@ -3,6 +3,7 @@ package com.example.practice;
 public class Member {
     private long id;
     private String loginId;
+    private int test;
     private String password;
     private String name;
 
@@ -44,5 +45,13 @@ public class Member {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getTest() {
+        return test;
+    }
+
+    public void setTest(int test) {
+        this.test = test;
     }
 }

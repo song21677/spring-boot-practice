@@ -5,29 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
+    .register {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      border: 1px solid black;
+    }
 
+    .register > h1 {
+      text-align: center;
+    }
+    .register label {
+      display: block;
+    }
+
+    .register input {
+      width: 100%;
+    }
+
+    .register .button {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .register button {
+      width: 47%;
+    }
+
+    .pass-error {
+      color: red;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
 
-<h1>회원가입</h1>
-<h2>회원 정보 입력</h2>
+<div class="register">
+    <h1>회원가입</h1>
 
-<form action="" method="post" th:object="${member}">
+  <form action="" method="post" th:object="${member}">
+    <h2>회원 정보 입력</h2>
 
-  <label for="loginId">로그인 ID</label>
-  <input type="text" id="loginId" th:field="*{loginId}"/>
+    <div>
+      <label for="loginId">로그인 ID</label>
+      <input type="text" id="loginId" th:field="*{loginId}"/>
+    </div>
 
-  <label for="password">비밀번호</label>
-  <input type="password" id="password"  th:field="*{password}">
+    <div>
+      <label for="test">test</label>
+      <input type="text" id="test" th:field="*{test}"/>
+    </div>
 
-  <label for="name">이름</label>
-  <input type="text" id="name"  th:field="*{name}">
-  <hr>
+    <div th:errors="*{test}" class="pass-error">비밀번호 오류</div>
+    <div th:text="${member.test}"></div>
 
-  <button >회원 가입</button>
-  <button>취소</button>
-</form>
+    <div>
+      <label for="password">비밀번호</label>
+      <input type="password" id="password"  th:field="*{password}">
+    </div>
+
+    <div th:errors="*{password}" class="pass-error">비밀번호 오류</div>
+
+    <div>
+      <label for="name">이름</label>
+      <input type="text" id="name"  th:field="*{name}">
+    </div>
+
+    <hr>
+
+     <div class="button">
+      <button>회원 가입</button>
+      <button>취소</button>
+    </div>
+  </form>
+</div>
 
 </body>
 </html>
