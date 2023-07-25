@@ -33,7 +33,7 @@
       width: 47%;
     }
 
-    .pass-error {
+    .error {
       color: red;
       font-size: 12px;
     }
@@ -52,25 +52,21 @@
       <input type="text" id="loginId" th:field="*{loginId}"/>
     </div>
 
-    <div>
-      <label for="test">test</label>
-      <input type="text" id="test" th:field="*{test}"/>
-    </div>
-
-    <div th:errors="*{test}" class="pass-error">비밀번호 오류</div>
-    <div th:text="${member.test}"></div>
+    <div th:errors="*{loginId}" class="error">아이디 오류</div>
 
     <div>
       <label for="password">비밀번호</label>
       <input type="password" id="password"  th:field="*{password}">
     </div>
 
-    <div th:errors="*{password}" class="pass-error">비밀번호 오류</div>
+    <div th:errors="*{password}" class="error">비밀번호 오류</div>
 
     <div>
       <label for="name">이름</label>
       <input type="text" id="name"  th:field="*{name}">
     </div>
+
+    <div th:errors="*{name}" class="error">이름 오류</div>
 
     <hr>
 
