@@ -7,11 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -27,10 +23,12 @@ public class HomeController {
             return "home";
         }
 
-        Optional<Member> loginMember = jdbcMemberRepository.findById(memberId);
-        if(loginMember.isEmpty()) return "home";
-
-        model.addAttribute("member", loginMember.get());
-        return "loginHome";
+        try {
+            Member loginMember = jdbcMemberRepository.findById(memberId);
+            model.addAttribute("member", loginMember);
+            return "loginHome";
+        } catch (NoSuchElementException e) {
+            return "home";
+        }
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,13 +45,8 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "loginForm";
         }
-
-        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
-
-        if (loginMember == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "loginForm";
-        }
+        try {
+            Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
 
             log.debug("{}", loginMember.getLoginId());
 
@@ -59,6 +55,12 @@ public class MemberController {
             Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
             response.addCookie(idCookie);
             return "redirect:/";
+        } catch (NoSuchElementException e) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "loginForm";
+
+
+        }
     }
 
     @PostMapping("/logout")

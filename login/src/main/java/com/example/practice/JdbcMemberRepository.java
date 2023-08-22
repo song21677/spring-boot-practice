@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.example.practice.ConnectionConst.*;
@@ -58,7 +59,7 @@ public class JdbcMemberRepository implements MemberRepository{
         return member;
     }
     @Override
-    public Optional<Member> findByLoginId(String loginId) {
+    public Member findByLoginId(String loginId) {
         String sql = "select * from member where loginId = ?";
 
         Connection con = null;
@@ -76,9 +77,9 @@ public class JdbcMemberRepository implements MemberRepository{
                 String password = rs.getString("password");
                 String name = rs.getString("name");
                 Member member = new Member(id, loginId, password, name);
-                return Optional.of(member);
+                return member;
             } else {
-                return Optional.empty();
+                throw new NoSuchElementException("member not found loginId=" + loginId);
             }
         } catch (SQLException e) {
             // db 접속 실패, sql 문법 오류
@@ -107,7 +108,7 @@ public class JdbcMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
+    public Member findById(Long id) {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -125,9 +126,9 @@ public class JdbcMemberRepository implements MemberRepository{
                 String password = rs.getString("password");
                 String name = rs.getString("name");
                 Member member = new Member(id, loginId, password, name);
-                return Optional.of(member);
+                return member;
             } else {
-                return Optional.empty();
+                throw new NoSuchElementException("member not found id=\" + id");
             }
         } catch (SQLException e) {
             log.error("error", e);

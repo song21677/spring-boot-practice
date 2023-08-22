@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 
 @Slf4j
 @Service
@@ -12,7 +14,8 @@ public class LoginService {
     private final JdbcMemberRepository jdbcMemberRepository;
 
     public Member login(String loginId, String password) {
-        return jdbcMemberRepository.findByLoginId(loginId)
-                .filter(m -> m.getPassword().equals(password)).orElse(null);
+        Member member = jdbcMemberRepository.findByLoginId(loginId);
+        if (member.getPassword().equals(password)) return member;
+        throw new NoSuchElementException("member not found password=" + member.getPassword());
     }
 }
