@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Controller
 public class MemberController {
-    private final MemberRepository memberRepository;
+    private final JdbcMemberRepository jdbcMemberRepository;
     private final LoginService loginService;
 
     @GetMapping("/add")
@@ -25,16 +24,11 @@ public class MemberController {
         return "addMemberForm";
     }
 
-//    @PostMapping("/add")
-//    public String save(@Validated @ModelAttribute Member member, BindingResult bindingResult) {
-//        memberRepository.save(member);
-//        return "addMemberForm";
-//    }
-
     @PostMapping("/add")
     public String save(@Validated(ValidationSequence.class) @ModelAttribute("member") MemberSaveForm form, BindingResult bindingResult) {
-        Member member = new Member(form.getLoginId(), form.getPassword(), form.getName());
-        Member save = memberRepository.save(member);
+        Member member = new Member(0, form.getLoginId(), form.getPassword(), form.getName());
+        Member save = jdbcMemberRepository.save(member);
+        log.debug("{}, {}, {}", member.getLoginId(), member.getPassword(), member.getName());
         return "addMemberForm";
     }
 
@@ -58,13 +52,13 @@ public class MemberController {
             return "loginForm";
         }
 
-        log.debug("{}", loginMember.getLoginId());
+            log.debug("{}", loginMember.getLoginId());
 
-        // 쿠키에 시간 정보를 주지 않으면 세션 쿠키(브라우저 종료시 모두 종료)
-        // 로그인 성공 처리
-        Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
-        response.addCookie(idCookie);
-        return "redirect:/";
+            // 쿠키에 시간 정보를 주지 않으면 세션 쿠키(브라우저 종료시 모두 종료)
+            // 로그인 성공 처리
+            Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+            response.addCookie(idCookie);
+            return "redirect:/";
     }
 
     @PostMapping("/logout")

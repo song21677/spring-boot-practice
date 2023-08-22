@@ -1,23 +1,18 @@
 package com.example.practice;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-    private final MemberRepository memberRepository;
+    private final JdbcMemberRepository jdbcMemberRepository;
 
     public Member login(String loginId, String password) {
-        return memberRepository.findByLoginId(loginId)
-                .filter(m -> m.getPassword().equals(password))
-                .orElse(null);
+        return jdbcMemberRepository.findByLoginId(loginId)
+                .filter(m -> m.getPassword().equals(password)).orElse(null);
     }
-//        Optional<Member> findMemberOptional = memberRepository.findByLoginId(loginId);
-//        Member member = findMemberOptional.get();
-//        if (member.getPassword().equals(password)) {
-//            return member;
-//        } else {
-//            return null;
-//        }
 }
