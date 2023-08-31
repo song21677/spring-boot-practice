@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +27,10 @@ public class MemberController {
 
     @PostMapping("/add")
     public String save(@Validated(ValidationSequence.class) @ModelAttribute("member") MemberSaveForm form, BindingResult bindingResult) {
+        log.debug("{}", bindingResult);
+        log.debug("{}", form.getName());
+        if (bindingResult.hasErrors()) return "addMemberForm";
+
         Member member = new Member(0, form.getLoginId(), form.getPassword(), form.getName());
         Member save = jdbcMemberRepository.save(member);
         log.debug("{}, {}, {}", member.getLoginId(), member.getPassword(), member.getName());
@@ -45,18 +50,18 @@ public class MemberController {
             return "loginForm";
         }
 
-        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
+        Optional<Member> loginMember = loginService.login(form.getLoginId(), form.getPassword());
 
-        if (loginMember == null) {
+        if (loginMember.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "loginForm";
         }
 
-            log.debug("{}", loginMember.getLoginId());
+            log.debug("{}", loginMember.get().getLoginId());
 
             // 쿠키에 시간 정보를 주지 않으면 세션 쿠키(브라우저 종료시 모두 종료)
             // 로그인 성공 처리
-            Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+            Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.get().getId()));
             response.addCookie(idCookie);
             return "redirect:/";
     }
