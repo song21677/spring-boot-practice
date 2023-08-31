@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -11,8 +13,8 @@ import org.springframework.stereotype.Service;
 public class LoginService {
     private final JdbcMemberRepository jdbcMemberRepository;
 
-    public Member login(String loginId, String password) {
+    public Optional<Member> login(String loginId, String password) {
         return jdbcMemberRepository.findByLoginId(loginId)
-                .filter(m -> m.getPassword().equals(password)).orElse(null);
+                .filter(m -> m.getPassword().equals(password));
     }
 }
